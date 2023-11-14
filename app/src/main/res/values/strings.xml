@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DavalebaN8</string>
+    <string name="add_user">Add User</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="email">Email</string>
+    <string name="update_user">Update User</string>
+    <string name="name_tv">Name:</string>
+    <string name="surname_tv">surname:</string>
+    <string name="email_tv">email:</string>
+    <string name="delete_user">Delete User</string>
+</resources>

@@ -2,7 +2,6 @@ package com.example.davaleban8
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log.d
 import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +28,7 @@ class UsersActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val data: Int = intent.getIntExtra("UserIndex", Int.MAX_VALUE)
-        if (data != Int.MAX_VALUE){
+        if (data != Int.MAX_VALUE) {
             recyclerView.adapter?.notifyItemChanged(data)
         }
     }

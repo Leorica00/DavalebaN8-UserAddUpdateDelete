@@ -1,13 +1,27 @@
 package com.example.davaleban8
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.davaleban8.databinding.ItemBinding
 
 class UserRecyclerAdapter(private val users: MutableList<User>) :
-    RecyclerView.Adapter<UserRecyclerAdapter.UserViewHolder>() {
+    ListAdapter<User, UserRecyclerAdapter.UserViewHolder>(
+        object : DiffUtil.ItemCallback<User>(){
+
+            override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+                return oldItem.email == newItem.email
+            }
+
+            override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+                return oldItem == newItem
+            }
+        }
+    ) {
+
+    var onItemClick: ((User) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         return UserViewHolder(
@@ -23,7 +37,6 @@ class UserRecyclerAdapter(private val users: MutableList<User>) :
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind()
-        holder.updateUser()
         holder.deleteUser()
     }
 
@@ -36,15 +49,8 @@ class UserRecyclerAdapter(private val users: MutableList<User>) :
                 inputSurnameTv.text = user.surname
                 inputEmailTv.text = user.email
             }
-        }
-
-        fun updateUser() {
             binding.updateBtn.setOnClickListener {
-                Intent(binding.root.context, UserActivity::class.java).also {
-                    it.putExtra("user", users[adapterPosition])
-                    it.putExtra("ButtonValue", "Update")
-                    binding.root.context.startActivity(it)
-                }
+                onItemClick?.invoke(user)
             }
         }
 

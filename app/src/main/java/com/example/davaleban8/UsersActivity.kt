@@ -39,21 +39,41 @@ class UsersActivity : AppCompatActivity() {
     }
 
     private fun setUpUsersRecyclerView() {
+        val userRecyclerAdapter = UserRecyclerAdapter(users = users)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = UserRecyclerAdapter(users = users)
+        recyclerView.adapter = userRecyclerAdapter
+        userRecyclerAdapter.onItemClick = {
+            val intent = Intent(this, UserActivity::class.java)
+            intent.putExtra("user", it)
+            intent.putExtra("ButtonValue", "Update")
+            launchUpdateActivity.launch(intent)
+        }
     }
-
 
     private fun setUpOnAddClick() {
         addButton.setOnClickListener {
             Intent(this, UserActivity::class.java).also {
                 it.putExtra("ButtonValue", "Add")
-                launchSomeActivity.launch(it)
+                launchAddActivity.launch(it)
             }
         }
     }
 
-    private val launchSomeActivity = registerForActivityResult(
+    private val launchUpdateActivity = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK){
+            val data = it.data
+            val index = data?.getIntExtra("UserIndex", -1)
+            if (index != -1){
+                recyclerView.adapter?.notifyItemChanged(index!!)
+            }
+
+        }
+
+    }
+
+    private val launchAddActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == RESULT_OK)

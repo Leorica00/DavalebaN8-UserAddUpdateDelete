@@ -25,14 +25,6 @@ class UsersActivity : AppCompatActivity() {
         setUp()
     }
 
-    override fun onResume() {
-        super.onResume()
-        val data: Int = intent.getIntExtra("UserIndex", Int.MAX_VALUE)
-        if (data != Int.MAX_VALUE) {
-            recyclerView.adapter?.notifyItemChanged(data)
-        }
-    }
-
     private fun setUp() {
         setUpUsersRecyclerView()
         setUpOnAddClick()
@@ -65,8 +57,8 @@ class UsersActivity : AppCompatActivity() {
         if (it.resultCode == RESULT_OK){
             val data = it.data
             val index = data?.getIntExtra("UserIndex", -1)
-            if (index != -1){
-                recyclerView.adapter?.notifyItemChanged(index!!)
+            if (index != -1 && index != null){
+                recyclerView.adapter?.notifyItemChanged(index)
             }
 
         }

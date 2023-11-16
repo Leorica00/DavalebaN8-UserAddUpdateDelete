@@ -99,11 +99,13 @@ class UserActivity : AppCompatActivity() {
                 if (!users.contains(user)) {
                     val index = users.indexOf(userToUpdate)
                     users[index] = user
-                    val intent = Intent()
-                    intent.putExtra("UserIndex", index)
-                    setResult(RESULT_OK, intent)
-                    addInputButton.visibility = View.GONE
-                    finish()
+                    Intent().also {
+                        it.putExtra("UserIndex", index)
+                        setResult(RESULT_OK, it)
+                        addInputButton.visibility = View.GONE
+                        finish()
+                    }
+
                 }
             }
         }

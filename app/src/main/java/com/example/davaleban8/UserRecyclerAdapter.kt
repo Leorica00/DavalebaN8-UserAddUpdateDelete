@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.davaleban8.databinding.ItemBinding
 
-class UserRecyclerAdapter(private val users: MutableList<User>) :
+class UserRecyclerAdapter :
     ListAdapter<User, UserRecyclerAdapter.UserViewHolder>(
         object : DiffUtil.ItemCallback<User>(){
 
@@ -20,8 +20,8 @@ class UserRecyclerAdapter(private val users: MutableList<User>) :
             }
         }
     ) {
-
-    var onItemClick: ((User) -> Unit)? = null
+    var onUpdateClick: ((User) -> Unit)? = null
+    var onDeleteClick: ((User) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         return UserViewHolder(
@@ -30,11 +30,6 @@ class UserRecyclerAdapter(private val users: MutableList<User>) :
             )
         )
     }
-
-    override fun getItemCount(): Int {
-        return users.size
-    }
-
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind()
         holder.deleteUser()
@@ -43,23 +38,20 @@ class UserRecyclerAdapter(private val users: MutableList<User>) :
     inner class UserViewHolder(private val binding: ItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind() {
-            val user = users[adapterPosition]
+            val user = currentList[adapterPosition]
             with(binding) {
                 inputNameTv.text = user.name
                 inputSurnameTv.text = user.surname
                 inputEmailTv.text = user.email
             }
             binding.updateBtn.setOnClickListener {
-                onItemClick?.invoke(user)
+                onUpdateClick?.invoke(user)
             }
         }
 
         fun deleteUser() {
             binding.deleteBtn.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    users.removeAt(adapterPosition)
-                    notifyItemRemoved(adapterPosition)
-                }
+                onDeleteClick?.invoke(currentList[adapterPosition])
             }
         }
     }

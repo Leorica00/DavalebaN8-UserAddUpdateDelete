@@ -14,6 +14,7 @@ class UsersActivity : AppCompatActivity() {
     private lateinit var addButton: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var users: MutableList<User>
+    private lateinit var adapter: UserRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +32,22 @@ class UsersActivity : AppCompatActivity() {
     }
 
     private fun setUpUsersRecyclerView() {
-        val userRecyclerAdapter = UserRecyclerAdapter(users = users)
+        adapter = UserRecyclerAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = userRecyclerAdapter
-        userRecyclerAdapter.onItemClick = {
+        recyclerView.adapter = adapter
+        adapter.onUpdateClick = {
             val intent = Intent(this, UserActivity::class.java)
             intent.putExtra("user", it)
             intent.putExtra("ButtonValue", "Update")
             launchUpdateActivity.launch(intent)
         }
+        adapter.onDeleteClick = {
+            val index = users.indexOf(it)
+            users.removeAt(index)
+            adapter.notifyItemRemoved(index)
+        }
     }
+
 
     private fun setUpOnAddClick() {
         addButton.setOnClickListener {
@@ -69,6 +76,7 @@ class UsersActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == RESULT_OK)
+            adapter.submitList(users)
             recyclerView.adapter?.notifyItemInserted(users.size - 1)
     }
 }
